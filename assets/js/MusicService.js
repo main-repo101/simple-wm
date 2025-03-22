@@ -13,13 +13,13 @@ class MusicService {
     async getPlaylistByMood(mood) {
         try {
             const genreMap = {
-                'happy':        ['pop', 'indie', 'rock', 'dance', 'electro', 'hiphop', 'rap'],
-                'chill':        ['electro', 'loft', 'lounge', 'soul', "latinx"],
-                'melancholic':  ['classical', 'traditional', 'folk', 'country', 'blues', 'jazz'],
-                'peaceful':     ['ambient', 'acoustic', 'folk', 'country', 'reggae', 'soul', 'blues', 'jazz', "shoegaze"],
-                'intense':      ['rock', 'psychedelic', 'metal', 'punk'],
-                'relaxed':      ['jazz', 'blues', 'soul', 'reggae', 'funk', 'rnb', 'hiphop', 'rap'],
-                'mysterious':   ['world', 'mystery', 'soundtrack', 'pop'],
+                'happy': ['pop', 'indie', 'rock', 'dance', 'electro', 'hiphop', 'rap'],
+                'chill': ['electro', 'loft', 'lounge', 'soul', "latinx"],
+                'melancholic': ['classical', 'traditional', 'folk', 'country', 'blues', 'jazz'],
+                'peaceful': ['ambient', 'acoustic', 'folk', 'country', 'reggae', 'soul', 'blues', 'jazz', "shoegaze"],
+                'intense': ['rock', 'psychedelic', 'metal', 'punk'],
+                'relaxed': ['jazz', 'blues', 'soul', 'reggae', 'funk', 'rnb', 'hiphop', 'rap'],
+                'mysterious': ['world', 'mystery', 'soundtrack', 'pop'],
             };
 
             const genre = genreMap[mood] || [];
@@ -31,7 +31,17 @@ class MusicService {
             const apiUrl = `https://openwhyd.org/hot?format=json`;
             console.log('Fetching playlist for genre:', genre, 'API URL:', apiUrl);
 
-            const response = await fetch(`${this.proxyUrl}?url=${encodeURIComponent(apiUrl)}`);
+            const response = await fetch(`${this.proxyUrl}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    _url: apiUrl, 
+                    _type: "music" 
+                })
+            });
+
             if (!response.ok) {
                 throw new Error(`Failed to fetch music data: ${response.statusText}`);
             }
@@ -73,7 +83,7 @@ class MusicService {
                     genre: track.pl || undefined
                 }));
 
-                
+
 
             playlist.sort((a, b) => {
                 const aName = a.genre?.name?.toLowerCase() || "unknown";

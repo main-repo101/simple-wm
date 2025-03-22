@@ -1,5 +1,4 @@
-// const WEATHER_API_KEY   = '47701f5718f6aa628d6c0339e916d916';
-const weatherService    = new WeatherService(WEATHER_API_KEY);
+const weatherService    = new WeatherService();
 const musicService      = new MusicService();
 const playerController  = new PlayerController();
 

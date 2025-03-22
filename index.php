@@ -1,13 +1,9 @@
 <?php
 
 header('Content-Type: text/html; charset=UTF-8');
-require_once 'config.php';
 
 ?>
 
-<script>
-    const WEATHER_API_KEY = '<?php echo WEATHER_API_KEY; ?>';
-</script>
 
 <!DOCTYPE html>
 <html lang="en">

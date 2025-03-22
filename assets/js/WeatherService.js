@@ -1,6 +1,6 @@
 class WeatherService {
     constructor(apiKey) {
-        this.apiKey = apiKey;
+        this.apiKey = apiKey || 'ignore';
         this.baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
     }
 
@@ -19,8 +19,22 @@ class WeatherService {
                 };
             }
 
-            const response = await fetch(
-                `${this.baseUrl}?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&appid=${this.apiKey}`
+            // const response = await fetch(
+            //     `${this.baseUrl}?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&appid=${this.apiKey}`
+            // );
+
+            const apiUrl = `${this.baseUrl}?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric`;
+            const response = await fetch('proxy.php',
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        _url: apiUrl,
+                        _type: "weather"
+                    })
+                }
             );
 
             if (!response.ok) {
