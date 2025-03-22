@@ -1,0 +1,16 @@
+# Editor directories and files
+.vscode/*
+.idea
+
+
+# Logs
+logs
+*.log
+
+.misc
+
+dist
+build
+*.local
+
+.env*
