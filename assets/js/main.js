@@ -10,6 +10,7 @@ async function initialize() {
         const weatherData = await weatherService.getCurrentWeather();
 
         // weatherData.condition = "Tornado";
+        // weatherData.description = "Tor hammer"
 
         updateWeatherUI(weatherData);
         
@@ -96,7 +97,7 @@ function updatePlaylistUI(playlist, weatherData) {
     playlistElement.innerHTML = playlist.map((track, index) => `
         <li data-index="${index}">
             ${track.name} - ${track.artist}
-            <p>Genre: ${track.genre ? track.genre.name : 'Unknown'}</p>
+            <p>Genre: ${track.playlistMood ? track.playlistMood.name : 'Unknown'}</p>
         </li>
     `).join('');
 }

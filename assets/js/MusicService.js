@@ -3,7 +3,7 @@ class MusicService {
         this.proxyUrl = 'proxy.php';
     }
 
-    genreExists(array_i, array_ii) {
+    playlistIndexExists(array_i, array_ii) {
         if (!Array.isArray(array_i) || !Array.isArray(array_ii)) {
             return [];
         }
@@ -12,24 +12,39 @@ class MusicService {
 
     async getPlaylistByMood(mood) {
         try {
-            const genreMap = {
-                'happy': ['pop', 'indie', 'rock', 'dance', 'electro', 'hiphop', 'rap'],
-                'chill': ['electro', 'loft', 'lounge', 'soul', "latinx"],
-                'melancholic': ['classical', 'traditional', 'folk', 'country', 'blues', 'jazz'],
-                'peaceful': ['ambient', 'acoustic', 'folk', 'country', 'reggae', 'soul', 'blues', 'jazz', "shoegaze"],
-                'intense': ['rock', 'psychedelic', 'metal', 'punk'],
-                'relaxed': ['jazz', 'blues', 'soul', 'reggae', 'funk', 'rnb', 'hiphop', 'rap'],
-                'mysterious': ['world', 'mystery', 'soundtrack', 'pop'],
+            // const playlistMoodMap = {
+            //     'happy': ['pop', 'indie', 'rock', 'dance', 'electro', 'hiphop', 'rap'],
+            //     'chill': ['electro', 'lofi', 'lo-fi', 'loft', 'lounge', 'soul', "latinx"],
+            //     'melancholic': ['classical', 'traditional', 'folk', 'country', 'blues', 'jazz'],
+            //     'peaceful': ['ambient', 'acoustic', 'folk', 'country', 'reggae', 'soul', 'blues', 'jazz', "shoegaze"],
+            //     'intense': ['rock', 'psychedelic', 'metal', 'punk'],
+            //     'relaxed': ['jazz', 'blues', 'soul', 'reggae', 'funk', 'rnb', 'hiphop', 'rap'],
+            //     'mysterious': ['world', 'mystery', 'soundtrack', 'pop'],
+            // };
+
+            // const genres = playlistMoodMap[mood] || [];
+
+            const playlistMoodMap = {
+                "chill": 0,
+                "happy": 1,
+                "melancholic": 2,
+                "peaceful": 3,
+                "intense": 4,
+                "relaxed": 5,
+                "mysterious": 6
             };
 
-            const genre = genreMap[mood] || [];
+            const playlistIndex = playlistMoodMap[mood] || 0;
 
-            console.log(`::: mode: '${mood}' | genre: '${genre}'`);
+            console.log(`::: mode: '${mood}' | playlistIndex: '${playlistIndex}'`);
 
-            // const apiUrl = `https://openwhyd.org/hot/${genre}?format=json`;
+            // const apiUrl = `https://openwhyd.org/hot/${playlistIndex}?format=json`;
 
-            const apiUrl = `https://openwhyd.org/hot?format=json`;
-            console.log('Fetching playlist for genre:', genre, 'API URL:', apiUrl);
+            // const apiUrl = `https://openwhyd.org/hot?format=json`;
+
+            const apiUrl = `https://openwhyd.org/u/67de4ccb6af9db76b08b383f/playlist/${playlistIndex}?format=json`;
+
+            console.log('Fetching playlist for playlistIndex:', playlistIndex, 'API URL:', apiUrl);
 
             const response = await fetch(`${this.proxyUrl}`, {
                 method: "POST",
@@ -47,31 +62,36 @@ class MusicService {
             }
 
             const data = await response.json();
+
             console.log('Raw API response:', data);
 
-            if (!data.tracks || data.tracks.length === 0) {
+            if (!data || data.length === 0) {
                 console.warn('No tracks found in the API response.');
                 return [];
             }
 
+            // if (!data.tracks || data.tracks.length === 0) {
+            //     console.warn('No tracks found in the API response.');
+            //     return [];
+            // }
 
-
-            const playlist = data.tracks
+            const playlist = data/*.tracks*/
                 .filter(track => {
-                    if (!track || !track.trackUrl || !track.name || !track.uNm) {
+
+                    if (!track || /*!track.trackUrl*/ !track.eId || !track.name || !track.uNm) {
                         return false;
                     }
 
-                    // Check if the track belongs to the selected genres
-                    if (genre.length > 0 && track.pl && track.pl.name) {
+                    // //REM: Check if the track belongs to the selected playlistIndexs
+                    // if (playlistIndex.length > 0 && track.pl && track.pl.name) {
 
-                        const trackGenres = track.pl.name.split(',').map(g => g.toLowerCase().trim());
+                    //     const genres = track.pl.name.split(/[, -]+/).map(g => g.toLowerCase().trim());
 
-                        if (!trackGenres.some(g => genre.includes(g))) {
+                    //     if (!genres.some(g => playlistIndex.includes(g))) {
 
-                            return false;
-                        }
-                    }
+                    //         return false;
+                    //     }
+                    // }
 
                     return true;
                 })
@@ -79,15 +99,16 @@ class MusicService {
                     id: track._id || 'unknown',
                     name: track.name || 'Unknown Title',
                     artist: track.uNm || 'Unknown Artist',
-                    url: track.trackUrl.startsWith('http') ? track.trackUrl : `https:${track.trackUrl}`,
-                    genre: track.pl || undefined
+                    // url: track.trackUrl.startsWith('http') ? track.trackUrl : `https:${track.trackUrl}`,
+                    url: `https://www.youtube.com/watch?v=${track.eId.replace(/^[\/]*yt\//, '')}`,
+                    playlistMood: track.pl || undefined
                 }));
 
 
 
             playlist.sort((a, b) => {
-                const aName = a.genre?.name?.toLowerCase() || "unknown";
-                const bName = b.genre?.name?.toLowerCase() || "unknown";
+                const aName = a.playlistMood?.name?.toLowerCase() || "unknown";
+                const bName = b.playlistMood?.name?.toLowerCase() || "unknown";
 
                 if (aName === "unknown" && bName !== "unknown") return 1;
                 if (bName === "unknown" && aName !== "unknown") return -1;
