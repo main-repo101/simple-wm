@@ -16,7 +16,7 @@ if (!isset($data['_url'])) {
 switch( $data["_type"] ) {
 
     case "music":
-        $url = filter_var($data['_url'], FILTER_SANITIZE_URL);
+        $url = filter_var($data['_url'] . "/" . OPEN_WHY_D_USER_ID . "/playlist/".$data["_playlistIndex"]."?format=json", FILTER_SANITIZE_URL);
         break;
     case "weather":
         $url = filter_var($data['_url'] . "&appid=" . WEATHER_API_KEY, FILTER_SANITIZE_URL) ;

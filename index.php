@@ -36,7 +36,7 @@ header('Content-Type: text/html; charset=UTF-8');
             <div id="now-playing"></div>
             <ul id="playlist"></ul>
         </div>
-        <div id="youtube-player"></div> <!-- Hidden YouTube Player -->
+        <div id="youtube-player"></div> 
     </div>
     <script src="assets/js/WeatherService.js"></script>
     <script src="assets/js/MusicService.js"></script>

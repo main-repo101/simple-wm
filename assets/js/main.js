@@ -80,7 +80,7 @@ function getMoodFromWeather(weatherData) {
 }
 
 function updatePlaylistUI(playlist, weatherData) {
-    console.log('Playlist data passed to UI:', playlist); // Debugging log
+    console.log('Playlist data passed to UI:', playlist); 
 
     const playlistElement = document.getElementById('playlist');
     const playlistMoodElement = document.getElementById('playlist-mood');
@@ -88,7 +88,7 @@ function updatePlaylistUI(playlist, weatherData) {
     if (playlist.length === 0) {
         playlistMoodElement.textContent = 'No playable tracks available for the current mood.';
         playlistElement.innerHTML = '<li>No playable tracks available</li>';
-        playerController.stop(); // Stop playback if no tracks are available
+        playerController.stop();
         return;
     }
 

@@ -42,7 +42,7 @@ class MusicService {
 
             // const apiUrl = `https://openwhyd.org/hot?format=json`;
 
-            const apiUrl = `https://openwhyd.org/u/67de4ccb6af9db76b08b383f/playlist/${playlistIndex}?format=json`;
+            const apiUrl = `https://openwhyd.org/u`;
 
             console.log('Fetching playlist for playlistIndex:', playlistIndex, 'API URL:', apiUrl);
 
@@ -53,7 +53,8 @@ class MusicService {
                 },
                 body: JSON.stringify({
                     _url: apiUrl, 
-                    _type: "music" 
+                    _type: "music",
+                    _playlistIndex: playlistIndex
                 })
             });
 

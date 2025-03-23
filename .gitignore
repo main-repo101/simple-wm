@@ -14,3 +14,5 @@ build
 *.local
 
 .env*
+
+config.php
